@@ -1,5 +1,20 @@
 [
   {
+    "path": "posts/2019-03-06-data-summary/",
+    "title": "Data Summary",
+    "description": "This is a brief description of my data.",
+    "author": [
+      {
+        "name": "Lea Frank",
+        "url": "https://github.com/lfrank14"
+      }
+    ],
+    "date": "2019-03-06",
+    "categories": [],
+    "preview": "posts/2019-03-06-data-summary/data-summary_files/figure-html5/plot1-1.png",
+    "last_modified": "2019-03-06T10:51:16-08:00"
+  },
+  {
     "path": "posts/welcome/",
     "title": "Welcome to DataViz Final Project",
     "description": "Welcome to our new blog, DataViz Final Project. We hope you enjoy \nreading what we have to say!",

@@ -4,9 +4,9 @@ description: |
   Welcome to our new blog, DataViz Final Project. We hope you enjoy 
   reading what we have to say!
 author:
-  - name: Nora Jones 
-    url: https://example.com/norajones
-    affiliation: Spacely Sprockets
+  - name: Lea Frank 
+    url: https://github.com/lfrank14
+    affiliation: University of Oregon
     affiliation_url: https://example.com/spacelysprokets
 date: 03-06-2019
 output:
