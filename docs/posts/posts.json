@@ -15,6 +15,21 @@
     "last_modified": "2019-03-06T10:51:16-08:00"
   },
   {
+    "path": "posts/2019-03-06-visualization-1/",
+    "title": "Visualization #1",
+    "description": "Category representations in the anterior hippocampus does NOT predict categorization accuracy.",
+    "author": [
+      {
+        "name": "Lea Frank",
+        "url": "https://github.com/lfrank14"
+      }
+    ],
+    "date": "2019-03-06",
+    "categories": [],
+    "preview": "posts/2019-03-06-visualization-1/visualization-1_files/figure-html5/figv1-1.png",
+    "last_modified": "2019-03-06T10:58:17-08:00"
+  },
+  {
     "path": "posts/welcome/",
     "title": "Welcome to DataViz Final Project",
     "description": "Welcome to our new blog, DataViz Final Project. We hope you enjoy \nreading what we have to say!",

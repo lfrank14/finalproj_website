@@ -1,0 +1,35 @@
+---
+title: "Visualization #1"
+description: |
+  Category representations in the anterior hippocampus does NOT predict categorization accuracy.
+author:
+  - name: Lea Frank
+    url: https://github.com/lfrank14
+date: 03-06-2019
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(lurrdatviz)
+library(tidyverse)
+```
+
+Data Summary: FACAT
+
+FACAT contains...
+
+```{r figv1}
+facat <- facat
+
+ggplot(facat, aes(catACCnew, ahip_train_catrep)) +
+  geom_point() + 
+  geom_smooth(se = FALSE, method = "lm") +
+  theme_minimal()
+
+corr_cv(facat$catACCnew, facat$ahip_train_catrep)
+```
+
+
