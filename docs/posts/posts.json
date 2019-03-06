@@ -10,9 +10,12 @@
       }
     ],
     "date": "2019-03-06",
-    "categories": [],
+    "categories": [
+      "dataviz",
+      "class"
+    ],
     "preview": "posts/2019-03-06-data-summary/data-summary_files/figure-html5/plot1-1.png",
-    "last_modified": "2019-03-06T10:51:16-08:00"
+    "last_modified": "2019-03-06T11:05:13-08:00"
   },
   {
     "path": "posts/2019-03-06-visualization-1/",
@@ -25,9 +28,12 @@
       }
     ],
     "date": "2019-03-06",
-    "categories": [],
+    "categories": [
+      "dataviz",
+      "class"
+    ],
     "preview": "posts/2019-03-06-visualization-1/visualization-1_files/figure-html5/figv1-1.png",
-    "last_modified": "2019-03-06T10:58:17-08:00"
+    "last_modified": "2019-03-06T11:05:26-08:00"
   },
   {
     "path": "posts/welcome/",
@@ -35,13 +41,15 @@
     "description": "Welcome to our new blog, DataViz Final Project. We hope you enjoy \nreading what we have to say!",
     "author": [
       {
-        "name": "Nora Jones",
-        "url": "https://example.com/norajones"
+        "name": "Lea Frank",
+        "url": "https://github.com/lfrank14"
       }
     ],
     "date": "2019-03-06",
-    "categories": [],
+    "categories": [
+      "trash"
+    ],
     "preview": {},
-    "last_modified": "2019-03-06T10:33:07-08:00"
+    "last_modified": "2019-03-06T11:04:59-08:00"
   }
 ]
