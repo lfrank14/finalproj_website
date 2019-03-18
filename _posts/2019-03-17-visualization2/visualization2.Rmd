@@ -1,0 +1,226 @@
+---
+title: "Visualization #2"
+description: |
+  Strength of memory representations depend on learning goals.
+author:
+  - name: Lea Frank
+    url: https://github.com/lfrank14
+date: 03-16-2019
+output:
+  distill::distill_article:
+    self_contained: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(plotly)
+library(lurrdatviz)
+library(paletteer)
+library(colorblindr)
+```
+
+```{r fig2a_data}
+
+facat <- facat
+facat_reps <- facat %>% 
+  select(subnum, contains("_train_")) %>% 
+  filter(subnum < 33) # missing data for most recent subjects
+
+collabels <- colnames(facat_reps[-1])
+
+# Tidy for plotting  
+facat_tidy <- facat_reps %>% 
+  gather(key = "tmp", value = "rep_strength", -1) %>% 
+  separate(col = "tmp", into = c("roi", NA, "rep_type")) %>% 
+  filter(rep_type != "itemrep" &
+           roi != "hip")
+
+# Summarize for plotting
+facat_sum <- groupsum(facat_tidy, y = rep_strength, g1 = roi, g2 = rep_type)
+
+```
+
+```{r fig1_v1_stats, inclue=FALSE}
+# Compare against 0, for reference / annotations
+results <- list()
+for (i in 1:(ncol(facat_reps) - 1)) {
+  results[[i]] <- t.test(facat_reps[i + 1])
+}
+
+pvals <- map(results, function(x)x$p.value)
+sig_reps <- tibble(condition = collabels,
+                   pval = pvals)
+```
+
+```{r fig2a_final}
+
+fig2a <- ggplot(facat_sum, aes(x = factor(roi, levels = c("ahip","phip","mofc")), 
+                      y = mean, fill = factor(rep_type, levels = c("itemrep2","catrep")))) +
+  geom_bar(stat = "identity", position = "dodge", color = "white") +
+  geom_errorbar(aes(ymin = mean - se, ymax = mean + se),
+                 position = position_dodge(width = .9), width = .2, color = "gray30") +
+  theme_minimal(base_size = 14) +
+  scale_fill_manual(values = c("steelblue","firebrick3"),
+                    name = NULL, labels = c("Item", "Category")) +
+  labs(y = "Cohen's d", x = NULL, caption = "* p < .05, + p < .1",
+       title = "Incidental Learning") +
+  scale_x_discrete(labels = c("Ant. HIP", "Post. HIP", "VMPFC")) +
+  scale_y_continuous(limits = c(-.015,.035)) +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_line(size = .3),
+        panel.grid.minor.y = element_line(size = .3),
+        legend.justification = c("right","top"),
+        axis.text.x = element_text(size = 14, color = "black"),
+        plot.caption = element_text(hjust = 1.75)) +
+  annotate(geom = "text", label = "*", x = .78, y = .03, size = 10) +
+  annotate(geom = "text", label = "+", x = 2.78, y = .026, size = 7)
+
+```
+
+```{r fig2b_data}
+dicat <- dicat %>% 
+  select(subnum, contains("avg"))
+
+dicat_tidy <- dicat %>% 
+  gather(key = "tmp", value = "mbeta", -subnum) %>%
+  separate(col = "tmp", into = c("mdl_fit","roi",NA))
+
+dicat_sum <- groupsum(dicat_tidy, y = mbeta, g1 = mdl_fit, g2 = roi)
+```
+
+```{r dicat_stats, include=FALSE}
+nvar <- length(dicat) - 1
+
+test_betas <- list()
+for (i in 1:nvar) {
+  test_betas[[i]] <- t.test(dicat[i+1])
+  test_betas[[i]]$data.name <- colnames(dicat)[i+1]
+}
+```
+
+```{r fig2b_final}
+
+fig2b <- ggplot(dicat_sum, aes(x = factor(roi, levels = c("ahip","phip","mofc")), 
+                      y = mean, fill = mdl_fit)) +
+  geom_bar(stat = "identity", position = "dodge", color = "white") +
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se),
+                position = position_dodge(width = .9), width = .2, color = "gray30") +
+  scale_fill_manual(values = c("steelblue","firebrick3"),
+                    name = NULL, labels = c("Exemplar", "Prototype")) +
+  labs(y = "Beta Estimate", x = NULL,
+       caption = "* p < .05, + p < .1",
+       title = "Feedback-based Learning") +
+  scale_x_discrete(labels = c("Ant. HIP", "Post. HIP", "VMPFC")) +
+  theme_minimal(base_size = 14) +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_line(size = .3),
+        panel.grid.minor.y = element_line(size = .3),
+        legend.justification = "top",
+        axis.text.x = element_text(size = 14, color = "black"),
+        plot.caption = element_text(hjust = 1.75)) +
+  ylim(c(-.2, .2)) +
+  annotate(geom = "text", label = "*", x = 1.78, y = -.16, size = 10) +
+  annotate(geom = "text", label = "*", x = 3.23, y = .19, size = 10) +
+  annotate(geom = "text", label = "+", x = 1.23, y = .16, size = 7)
+
+```
+
+```{r fig.width=10, fig.height=5}
+cowplot::plot_grid(fig2a, fig2b, labels = NULL)
+```
+
+
++ Data: FACAT & DICAT
++ Figure A: Bar plot showing mean strength of item and category representations across different brain regions. 
++ Figure B: Bar plot showing the average correlation between the model fits (exemplar v. prototype) and activity in each brain region. 
++ Message: To show that during an incidental category learning, item representations are present in anterior hippocampus and VMPFC, but during feedback-based learning, category representations are present in anterior hippocampus and VMPFC
++ Audience: advisor and lab mates, research colleagues
++ Notes: We only really care about the strength of each type of representation as it compares to 0.
+
+
+### Versions of Figure 2A
+
+Below is the first version of Figure 2A. I knew pretty clearly what I wanted to do with this figure so only minor edits were made. I added white lines around the bars to make them pop. 
+
+```{r fig2a_v1}
+
+ggplot(facat_sum, aes(x = factor(roi, levels = c("ahip","phip","mofc")), 
+                      y = mean, fill = factor(rep_type, levels = c("itemrep2","catrep")))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_hline(yintercept = 0, color = "#343434", alpha = .5) +
+  geom_errorbar(aes(ymin = mean - se, ymax = mean + se),
+                 position = position_dodge(width = .9), width = .2, color = "#343434") +
+  theme_minimal(base_size = 16) +
+  scale_fill_paletteer_d(package = "rcartocolor", palette = "Vivid",
+                         name = NULL, labels = c("Item", "Category")) +
+  labs(y = "Cohen's d", x = NULL) +
+  scale_x_discrete(labels = c("Ant. HIP", "Post. HIP", "VMPFC")) +
+  scale_y_continuous(limits = c(-.015,.035)) +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_line(size = .3),
+        panel.grid.minor.y = element_line(size = .3),
+        #legend.position = c(.99, .99), 
+        legend.justification = c("right","top"),
+        axis.text.x = element_text(size = 16, color = "black"),
+        axis.text.y = element_text(color = "black"),
+        plot.caption = element_text(hjust = -1)) +
+  annotate(geom = "text", label = "*", x = .78, y = .03, size = 10)
+
+```
+
+I also tried flipping the x and y axis so that the bars were presented horizontally, however, I thought it was difficult to read. 
+
+```{r fig2a_v2}
+ggplot(facat_sum, aes(x = factor(roi, levels = c("ahip","phip","mofc")), 
+                      y = mean, fill = factor(rep_type, levels = c("itemrep2","catrep")))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_hline(yintercept = 0, color = "#343434", alpha = .5) +
+  geom_errorbar(aes(ymin = mean - se, ymax = mean + se),
+                 position = position_dodge(width = .9), width = .2, color = "#343434") +
+  theme_minimal(base_size = 16) +
+  scale_fill_paletteer_d(package = "rcartocolor", palette = "Vivid",
+                         name = NULL, labels = c("Item", "Category")) +
+  labs(y = "Cohen's d", x = NULL) +
+  scale_x_discrete(labels = c("Ant. HIP", "Post. HIP", "VMPFC")) +
+  scale_y_continuous(limits = c(-.015,.035)) +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.x = element_line(size = .3),
+        panel.grid.minor.x = element_line(size = .3),
+        #legend.position = c(.99, .99), 
+        legend.justification = c("right","top"),
+        axis.text.x = element_text(size = 16, color = "black"),
+        axis.text.y = element_text(color = "black"),
+        plot.caption = element_text(hjust = -1)) +
+  annotate(geom = "text", label = "*", x = .71, y = .03, size = 10) +
+  coord_flip()
+```
+
+### Versions of Figure 2B
+
+As I created this plot, I thought it was too similar to the figure created from the FACAT data. However, as I started to put together the narrative, I decided it would be nice to compare with representations during incidental learning.  
+
+```{r fig2b_v1}
+
+ggplot(dicat_sum, aes(x = roi, y = mean, fill = mdl_fit)) +
+  geom_hline(yintercept = 0, color = "#343434", alpha = .9) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se),
+                position = position_dodge(width = .9), 
+                width = .2, color = "#343434") +
+  scale_fill_OkabeIto(name = NULL,
+                      labels = c("Exemplar Fits", "Prototype Fits")) +
+  labs(y = "Parameter Estimates", x = NULL) +
+  scale_x_discrete(labels = c("Ant. HIP", "VMPFC", "Post. HIP")) +
+  theme_minimal(base_size = 16) +
+  theme(legend.justification = "top")
+  
+```
+

@@ -1,55 +1,68 @@
 [
   {
-    "path": "posts/2019-03-06-data-summary/",
-    "title": "Data Summary",
-    "description": "This is a brief description of my data.",
+    "path": "posts/2019-03-17-visualization3/",
+    "title": "Visualization #3",
+    "description": "During incidental learning, item representations in brain track category generalization.",
     "author": [
       {
         "name": "Lea Frank",
         "url": "https://github.com/lfrank14"
       }
     ],
-    "date": "2019-03-06",
-    "categories": [
-      "dataviz",
-      "class"
-    ],
-    "preview": "posts/2019-03-06-data-summary/data-summary_files/figure-html5/plot1-1.png",
-    "last_modified": "2019-03-06T11:05:13-08:00"
+    "date": "2019-03-17",
+    "categories": [],
+    "preview": "posts/2019-03-17-visualization3/visualization3_files/figure-html5/fig3_final-1.png",
+    "last_modified": "2019-03-17T20:52:14-07:00",
+    "preview_width": 2016,
+    "preview_height": 806
   },
   {
-    "path": "posts/2019-03-06-visualization-1/",
+    "path": "posts/2019-03-17-visualization2/",
+    "title": "Visualization #2",
+    "description": "Strength of memory representations depend on learning goals.",
+    "author": [
+      {
+        "name": "Lea Frank",
+        "url": "https://github.com/lfrank14"
+      }
+    ],
+    "date": "2019-03-16",
+    "categories": [],
+    "preview": "posts/2019-03-17-visualization2/visualization2_files/figure-html5/unnamed-chunk-1-1.png",
+    "last_modified": "2019-03-17T20:52:56-07:00",
+    "preview_width": 1920,
+    "preview_height": 960
+  },
+  {
+    "path": "posts/2019-03-10-visualization1/",
     "title": "Visualization #1",
-    "description": "Category representations in the anterior hippocampus does NOT predict categorization accuracy.",
+    "description": "Learning goals drive strategies used during categorization.",
     "author": [
       {
         "name": "Lea Frank",
         "url": "https://github.com/lfrank14"
       }
     ],
-    "date": "2019-03-06",
-    "categories": [
-      "dataviz",
-      "class"
-    ],
-    "preview": "posts/2019-03-06-visualization-1/visualization-1_files/figure-html5/figv1-1.png",
-    "last_modified": "2019-03-06T11:05:26-08:00"
+    "date": "2019-03-10",
+    "categories": [],
+    "preview": "posts/2019-03-10-visualization1/visualization1_files/figure-html5/unnamed-chunk-1-1.png",
+    "last_modified": "2019-03-17T18:18:29-07:00",
+    "preview_width": 2880,
+    "preview_height": 1440
   },
   {
-    "path": "posts/welcome/",
-    "title": "Welcome to DataViz Final Project",
-    "description": "Welcome to our new blog, DataViz Final Project. We hope you enjoy \nreading what we have to say!",
+    "path": "posts/2019-03-10-welcome/",
+    "title": "Welcome",
+    "description": "Welcome to my final project blog.",
     "author": [
       {
         "name": "Lea Frank",
         "url": "https://github.com/lfrank14"
       }
     ],
-    "date": "2019-03-06",
-    "categories": [
-      "trash"
-    ],
+    "date": "2019-03-10",
+    "categories": [],
     "preview": {},
-    "last_modified": "2019-03-06T11:04:59-08:00"
+    "last_modified": "2019-03-17T17:22:24-07:00"
   }
 ]

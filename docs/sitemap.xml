@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" version="1.0">
+  <url>
+    <loc>https://lfrank14.github.io/finalproj_website/about.html</loc>
+    <lastmod>2019-03-10T13:43:06-07:00</lastmod>
+  </url>
+  <url>
+    <loc>https://lfrank14.github.io/finalproj_website/</loc>
+    <lastmod>2019-03-06T10:31:54-08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://lfrank14.github.io/finalproj_website/LICENSE.html</loc>
+    <lastmod>2019-03-06T10:36:47-08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://lfrank14.github.io/finalproj_website/README.html</loc>
+    <lastmod>2019-03-06T10:36:47-08:00</lastmod>
+  </url>
+  <url>
+    <loc>https://lfrank14.github.io/finalproj_website/posts/2019-03-17-visualization3/</loc>
+    <lastmod>2019-03-17T20:52:14-07:00</lastmod>
+  </url>
+  <url>
+    <loc>https://lfrank14.github.io/finalproj_website/posts/2019-03-17-visualization2/</loc>
+    <lastmod>2019-03-17T20:52:56-07:00</lastmod>
+  </url>
+  <url>
+    <loc>https://lfrank14.github.io/finalproj_website/posts/2019-03-10-visualization1/</loc>
+    <lastmod>2019-03-17T18:18:29-07:00</lastmod>
+  </url>
+  <url>
+    <loc>https://lfrank14.github.io/finalproj_website/posts/2019-03-10-welcome/</loc>
+    <lastmod>2019-03-17T17:22:24-07:00</lastmod>
+  </url>
+</urlset>

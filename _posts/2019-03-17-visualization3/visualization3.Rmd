@@ -1,0 +1,137 @@
+---
+title: "Visualization #3"
+description: |
+  During incidental learning, item representations in brain track category generalization.
+author:
+  - name: Lea Frank
+    url: https://github.com/lfrank14
+date: 03-17-2019
+output:
+  distill::distill_article:
+    self_contained: false
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(lurrdatviz)
+library(paletteer)
+```
+
+
+```{r fig3_data}
+facat_sub <- facat %>% 
+  filter(subnum < 33) %>% 
+  select(subnum, postpre_mSim_Relevant, postpre_mSim_Irrelevant,
+         catACC, catACCnew, catACCold, 
+         CHR, FA, mFirstName, mSurname, mFullName,
+         contains("_train_")) %>% 
+  gather(key = "tmp", value = "rep_str", 12:23) %>% 
+  separate(col = "tmp", into = c("roi", NA, "rep_type")) %>%
+  filter(roi != "hip" & rep_type != "itemrep") %>% 
+  mutate(roi = factor(roi, levels = c("ahip","phip","mofc"),
+                      labels = c("Ant. HIP", "Post. HIP", "VMPFC")))
+
+```
+
+```{r fig3_final, fig.height=4.2, fig.width=10.5}
+facat_sub %>% 
+  ggplot(aes(x = rep_str, y = catACCnew, 
+             color = factor(rep_type, levels = c("itemrep2","catrep")))) +
+  geom_point(alpha = .7) +
+  stat_smooth(geom = "line", se = FALSE, alpha = .3, method = "lm",
+              size = 1) +
+  geom_smooth(data = filter(facat_sub, roi == "VMPFC" & rep_type == "itemrep2"),
+              se = FALSE, method = "lm", size = 1) +
+  facet_wrap(~roi) +
+  theme_minimal(base_size = 18) +
+  labs(x = "Strength of Representation \n(Cohen's D)",
+       y = "Categorization Accuracy \n(new faces)") +
+  scale_color_manual(values = c("steelblue","firebrick3"),
+                     name = NULL, labels = c("Item", "Category")) +
+  theme(legend.position = "bottom",
+        legend.text = element_text(size = 16),
+        panel.grid = element_line(size = .3),
+        axis.text = element_text(color = "black"),
+        axis.title.x = element_text(margin = margin(15,0,0,0, unit = "pt")),
+        axis.title.y = element_text(margin = margin(0,15,0,0, unit = "pt")),
+        strip.text = element_text(size = 18))
+```
+
++ Data: FACAT
++ Figure: scatter plot between strength of item/category representations in different brain regions and category generalization performance
++ Message: To show that during incidental learning, item representations in the VMPFC tracked categorization accuracy for new faces, providing neural evidence suggesting that participants were using an exemplar strategy to generalize.  
++ Audience: advisor, lab mates, research colleagues
+
+
+### Versions of Figure 3
+
+When creating this figure, I had two ideas in mind. The first version would be a scatter plot showing the relationship between the strength of memory representations in each brain region and categorization performance. The second version would show a distribution of beta estimates when I regress the strength of memory representations onto categorization accuracy. 
+
+```{r fig3_v1, fig.height=4.2, fig.width=10.5}
+facat_sub %>% 
+  ggplot(aes(x = rep_str, y = catACCnew, color = rep_type)) +
+  geom_point(alpha = .8) +
+  stat_smooth(geom = "line", se = FALSE, alpha = .3, method = "lm",
+              size = 1) +
+  geom_smooth(data = filter(facat_sub, roi == "VMPFC" & rep_type == "itemrep2"),
+              se = FALSE, method = "lm", size = 1) +
+  facet_wrap(~roi) +
+  theme_minimal(base_size = 16) +
+  labs(x = "Strength of Representation \n(Cohen's D)",
+       y = "Categorization Accuracy \n(new faces)") +
+  scale_color_paletteer_d(package = "rcartocolor", palette = "Vivid",
+                         name = NULL, labels = c("Category Rep.", "Item Rep.")) +
+  theme(legend.position = "bottom",
+        axis.text = element_text(color = "black"))
+```
+
+```{r fig3_v2_data, include=FALSE}
+cat_regress <- lm(data = facat, 
+                  catACCnew ~ ahip_train_itemrep2 + ahip_train_catrep +
+                    phip_train_itemrep2 + phip_train_catrep +
+                    mofc_train_itemrep2 + mofc_train_catrep)
+
+summary(cat_regress)
+
+mdl <- broom::tidy(cat_regress) %>% 
+  mutate(ci_lower = estimate - (1.96)*std.error,
+         ci_upper = estimate + (1.96)*std.error) %>% 
+  filter(term != "(Intercept)")
+
+mdl$term <- factor(mdl$term, levels = c("ahip_train_itemrep2", "ahip_train_catrep",
+                                        "phip_train_itemrep2", "phip_train_catrep",
+                                        "mofc_train_itemrep2", "mofc_train_catrep"))  
+```
+
+```{r fig3_v2}
+
+term_color <- ifelse(mdl$p.value < .05, "#15C18C", "#6E6E6E") 
+
+ggplot(mdl, aes(x = term, y = estimate)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray") +
+  geom_errorbar(aes(ymin = ci_lower, ymax = ci_upper), width = .2,
+                alpha = .9, color = "#6E6E6E") +
+  geom_point(alpha = .8, color = "#6E6E6E") +
+  geom_errorbar(data = filter(mdl, term == "mofc_train_itemrep2"),
+                aes(ymin = ci_lower, ymax = ci_upper), 
+                width = .2, color = "#15C18C") +
+  geom_point(data = filter(mdl, term == "mofc_train_itemrep2"), 
+             color = "#15C18C") +
+  coord_flip() +
+  theme_minimal(base_size = 14) +
+  labs(x = NULL, y = "Beta Estimate",
+       caption = "Figure 3. Item representations in the VMPFC predict category generalization") +
+  scale_x_discrete(limits = rev(levels(mdl$term)),
+                   labels = c("VMPFC Cat Rep.", "VMPFC Item Rep.",
+                              "Post. HIP Cat Rep.", "Post. HIP Item Rep.",
+                              "Ant. HIP Cat Rep.", "Ant. HIP Item Rep.")) +
+  theme(axis.text.y = element_text(color = rev(term_color)),
+        plot.caption = element_text(hjust = 1.5, size = 14))
+
+```
+
+I had a hard time deciding which version of figure 3 that I wanted to go with for the final product. Ultimately, I chose to stick with version 1 so that the viewers could get an idea of the distribution of the data. I felt this was particularly important as the data is exploratory. Moreover, I thought version 1 would fit well with the formatting of the other two figures and maintain a coherent narrative. 

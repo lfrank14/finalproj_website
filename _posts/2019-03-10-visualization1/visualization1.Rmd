@@ -1,0 +1,192 @@
+---
+title: "Visualization #1"
+description: |
+  Learning goals drive strategies used during categorization.
+author:
+  - name: Lea Frank
+    url: https://github.com/lfrank14
+date: 03-10-2019
+output:
+  distill::distill_article:
+    self_contained: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+# devtools::install_github("lfrank14/lurrdatviz")
+
+library(tidyverse)
+library(lurrdatviz)
+
+```
+
+
+```{r data}
+# Figure 1A data
+behav <- facat %>%
+  mutate(behav_cateffect = postpre_mSim_Relevant - postpre_mSim_Irrelevant) %>% 
+  select(catACCnew, behav_cateffect, FA, 
+         CHR, mFirstName, mSurname, mFullName)
+
+zbehav <- scale(behav)
+
+zbehav_corrmat_lwr <- cormat_lower(zbehav, diag = FALSE)
+
+# Figure 1B data
+aepet <- aepet %>% 
+  mutate(PET_cat_isprot = factor(PET_cat_isprot, labels = c("Exemplarist","Prototypist")))
+```
+
+
+```{r fig1a_final}
+sig_cors <- ifelse(zbehav_corrmat_lwr$value > .367 | zbehav_corrmat_lwr$value < -.367, "black", "dimgray")
+y_labels <- c("black","firebrick","firebrick","steelblue","steelblue","steelblue")
+x_labels <- c("firebrick","firebrick","steelblue","steelblue","steelblue","steelblue")
+
+fig1a <- ggplot(zbehav_corrmat_lwr,
+       aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile(color = "white", alpha = .9) +
+  geom_text(aes(label = round(value,2)), size = 6,
+            color = sig_cors) +
+  scale_fill_distiller(type = "seq", palette = "RdBu", direction = 1, name = "Pearson \nCorrelation") +
+  coord_fixed() +
+  scale_y_discrete(labels = c("Categorization", "Perceptual Similarity", "False Alarms",
+                              "Recognition", "First Name", "Surname")) +
+  scale_x_discrete(labels = c("Perceptual Similarity", "False Alarms", "Recognition",
+                              "First Name", "Surname", "Full Name")) +
+  theme_minimal(base_size = 24) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, color = x_labels),
+        axis.text.y = element_text(color = y_labels),
+        axis.title = element_blank(),
+        panel.grid = element_line(size = .3),
+        legend.justification = "top", 
+        plot.caption = element_text(hjust = 1.4, size = 14))
+```
+
+```{r fig1b_final}
+corvals <- cor.test(aepet$PET_g, aepet$PET_s)
+r <- round(corvals$estimate[[1]],3)
+p <- round(corvals$p.value[[1]],3)
+
+fig1b <- aepet %>% 
+  ggplot(aes(x = PET_s, y = PET_g)) +
+  geom_point(alpha = .4) +
+  geom_smooth(method = "lm", alpha = .2, color = "gray20") +
+  labs(x = "Recognition Accuracy\n (hits - false alarms)", y = "Categorization Accuracy\n (new stimuli only)") +
+  theme_minimal(base_size = 24) +
+  theme(axis.title.x = element_text(color = "steelblue"),
+        axis.title.y = element_text(color = "black"),
+        panel.grid = element_line(size = .3)) +
+  coord_fixed() +
+  ylim(0,1) +
+  annotate(geom = "text", x = -.38, y = .06, 
+           label = str_interp(" r = ${r},\np = ${p}"),
+           size = 6)
+```
+
+```{r fig.width=15, fig.height=7.5}
+cowplot::plot_grid(fig1a, fig1b, labels = c("Incidental Learning", "Feedback-based Learning"), 
+                   rel_widths = c(1.5,1), rel_heights = c(1.5,1), label_size = 22)
+```
+
+
++ Data: FACAT and AEPET behavioral test measures
+  + Measures for specific memory - recollection of full, first, and surname; recognition of old/new faces (corrected hit rate)
+  + Measures for generalized memory - false alarms (recognizing new faces as old), categorization accuracy for new faces, increase in perceptual similarity of faces in the same category from pre to post training
++ Figure 1A: Correlation matrix for the different task measures. 
++ Figure 1B: Correlation between category generalization and recognition performance.
++ Message: Following incidental category learning, performance on category generalization (i.e. categorization for new stimuli) is correlated with measures of memory specificity, suggesting that generalization may rely on specific memory representations for previously encountered examples. Following feedback-based category learning, there was no association between category generalization and recognition memory, suggesting that participants did not rely on exemplars for generalization, but rather may use abstract representations of the category structures.
++ Audience: advisor and lab mates, research colleagues 
+
+
+### Versions of Figure 1A
+
+Below is the first version of the figure that I included in my portfolio. Originally, I tried to create the correlation matrix using the packages `corrplot` and then `ggcorrplot`. Ultimately, however, I decided that ggplot had more flexibility in adjusting the features of the plot and applying themes. At first, it was a little frustrating to get the correlation matrix to show just the lower half of the correlation matrix and remove diagonal, but with some helpful searches on the internet, I was able to create a function `cormat_lower` that would put the data into the format that I needed for plotting. Another thing I was having trouble with was the direction of the plot. For some reason, it felt more intuitive for the tiles to move from highest to lowest on the x-axis. However, after playing around with the order and trying to get the values to match up with the correct labels, I decided to scrap that effort and plot it as is.
+
+```{r fig1a_v1}
+ggplot(zbehav_corrmat_lwr,
+       aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile(color = "white", alpha = .9) +
+  geom_text(aes(label = round(value,2)), size = 4) +
+  scale_fill_gradient2(low = "#00836B", mid = "white", high = "#CC7400",
+                       name = "Pearson \nCorrelation") +
+  coord_fixed() +
+  scale_y_discrete(labels = c("Categorization", "Perceptual Similarity", "False Alarms",
+                              "Corrected Hit Rate", "First Name", "Surname")) +
+  scale_x_discrete(labels = c("Perceptual Similarity", "False Alarms", "Corrected Hit Rate",
+                              "First Name", "Surname", "Full Name")) +
+  theme_minimal(base_size = 14) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title = element_blank(),
+        legend.justification = "top", 
+        plot.caption = element_text(hjust = 1.4, size = 14))
+```
+
+
+
+I really liked one of the suggestions by one of my peer reviewers to adjust the color of the scale to reflect significant v. not significant correlations. After MANY attempts to play around with the color, I decided that it was a little too complicated and may not be color-blind friendly. However, I really appreciated the idea of highlighting the signficant correlations, so I decided to instead try to use bold font for the correlation values to indicate significance. 
+
+```{r fig1a_v2}
+# rcrit for df = 27 and p < .05 is .367, trending (p < .1) is .311
+
+ggplot(zbehav_corrmat_lwr,
+       aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile(color = "white", alpha = .9) +
+  geom_text(aes(label = round(value,2)), size = 4) +
+  #scale_fill_gradient2(low = "#00836B", mid = "white", high = "#CC7400",
+  #                     name = "Pearson \nCorrelation") +
+  scale_fill_gradientn(colors = c("#D32F2F", "#FF6F00" , "#FDD835", "white", "#8BC34A", "#00BCD4", "#3F51B5"),
+                       values = scales::rescale(c(-.8, -.367, -.31, 0, .31, .367, .8)), 
+                       name = "Pearson \nCorrelation") +
+  coord_fixed() +
+  scale_y_discrete(labels = c("Categorization", "Perceptual Similarity", "False Alarms",
+                              "Corrected Hit Rate", "First Name", "Surname")) +
+  scale_x_discrete(labels = c("Perceptual Similarity", "False Alarms", "Corrected Hit Rate",
+                              "First Name", "Surname", "Full Name")) +
+  theme_minimal(base_size = 14) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title = element_blank(),
+        legend.justification = "top", 
+        plot.caption = element_text(hjust = 1.4, size = 14))
+
+```
+
+Finally, I wanted to adjust the color of the font on the x and y-axes so that the different task measures were scaled by "generalization measures" and "specificity measures". I felt that this would really help take the point home that category generalization in the incidental learning task was more correlated with measures of specificity than generalization. 
+
+### Versions of Figure 1B
+
+Version 1.Below is the very first figure that I created when I was just playing around with the data. Noticing that there was a pretty strong relationship between which strategy people used during category generalization (i.e. generalizing based off previously encountered exemplars or generalizing based off abstract prototype), I decided that the story I would tell is the potential difference in generalization strategies that occurs between incidental learning (when learning goal is to focus on the specific face-name associations) and feedback-based learning (when the explicit goal is to learn the categories). As you can tell, the prototype advantage data (i.e. the proportional difference between the strength of model fits between the prototype and exemplar model) is relatively skewed above zero, suggesting that more people were relying on protoype representations during category generalization than on exemplar representations. As such, I decided that summarizing the category generalization accuracy across groups (prototypists v. exemplarists) may prove more powerful.
+
+
+```{r fig1b_v1}
+
+aepet %>% 
+  ggplot(aes(x = PET_cat_protadv, y = PET_g)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "lm", color = "#15C18C") +
+  theme_minimal() +
+  labs(x = "Prototype Advantage \n(i.e. prototype model fit better)",
+       y = "Category Generalization Accuracy")
+
+```
+
+I first decided to try looking at category generalization accuracy between those who used an exemplar-based strategy and those who used a prototype-based strategy. Although it made the point I wanted it to - that prototype strategy for category generalization was associated with better performance - I thought that the bars were kind of boring and it wasn't very comparable to the plot for incidental learning. I finally decided on the simple correlation plot between category generalization and recognition (measure of memory specificity). Moreover, I decided to plot this figure side-by-side with the correlation matrix from the incidental learning task to make the point that the type of memory representations used during category generalization may depend on the goals of learning.
+
+
+```{r fig1b_v2}
+
+mdl_sum <- groupsum(aepet, y = PET_g, g1 = PET_cat_isprot)
+
+ggplot(mdl_sum, aes(x = PET_cat_isprot, y = mean, fill = PET_cat_isprot)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), width = .2) +
+  labs(x = "Dominant Categorization Strategy",
+       y = "Mean Categorization Accuracy \n(new stimuli only)") +
+  scale_fill_manual(values = c("steelblue","firebrick"), guide = "none") +
+  theme_minimal(base_size = 16)
+
+```
+

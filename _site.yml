@@ -1,12 +1,23 @@
 name: "finalproj_website"
 title: "DataViz Final Project"
 description: |
-  DataViz Final Project
+  Incidental v. Feedback-based Concept Learning
 output_dir: "docs"
 navbar:
-  right:
+  left:
     - text: "Home"
       href: index.html
-    - text: "About"
+  right:
+    - text: "Data Sources"
       href: about.html
-output: distill::distill_article
+    - icon: fa fa-github
+      href: https://github.com/lfrank14/finalproj_website
+output: 
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
+base_url: https://lfrank14.github.io/finalproj_website/
+collections:
+  posts:
+    disqus: finalproj_website
+    share: [twitter, linkedin]

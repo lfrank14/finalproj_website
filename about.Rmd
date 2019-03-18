@@ -1,9 +1,17 @@
 ---
-title: "About this blog"
+title: "Data Summary"
 description: |
-  Some additional details about the blog
+  Summary of the data included in my final project. 
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+
+**FACAT**: An incidental category learning task. Participants studied face-name associations, with the surname indicatnig the underlying cateogry structure. Representational similarity analysis (RSA) was used to test if certain brain regions (anterior hippocampus, posterior hippocampus, and ventromedial prefrontal cortex/medial orbitofrontal cortex) were representing the unique faces (item representation) or the underlying category structure (category representations). 
+
+**DICAT**: A feedback-based category learning task. Participants learned to categorize novel cartoon "animals" into the appropriate categories (e.g. febbles and badoons). During test, participants had to categorize old and new animals. Categorization accuracy for new animals measured the participants ability to generalize what they learned to new experiences. Behavioral models were also used to determine what strategy participants used while categorizing new animals. Under the exemplar approach, participants use previously encountered animals (exemplars) to categorize new ones. Under the prototype approach, participants use an abstract representation (prototype) to categorize new animals.
+
+**AEPET**: An individual differences study that includes a similar task to that of DICAT, just using different cartoon animals. 
+
+Please note, permission has been granted to use the data for my final project, but much of what you will be seeing is not yet published. 

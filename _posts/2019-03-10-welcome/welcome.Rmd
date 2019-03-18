@@ -1,0 +1,26 @@
+---
+title: "Welcome"
+description: |
+  Welcome to my final project blog.
+author:
+  - name: Lea Frank
+    url: https://github.com/lfrank14
+    affiliation: Brain & Memory Lab, UO
+    affiliation_url: https://cognem.uoregon.edu/
+date: 03-10-2019
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+This final project started out with a clear focus - I wanted to prepare some figures to include in an NIH NRSA application. The premise of my research is how we extract commonalities across our experiences to form generalized knowledge, and how we use that knowledge to guide us through new environments. Moreover, I am interested in how memory representations in the hippocampus support generalization, i.e. how we apply prior knowledge to new experiences. 
+
+Of course, how research goes, the data doesn't tell a pretty story like I had originally thought, so I decided to come up with a new one.
+
+The data that I have is taken from a couple of different tasks that were conducted in my lab (see Data Sources in the top right header for a description of the data sources). Each task is a variant of a concept learning task. During training, participants learn how the stimuli are organized into different categories. During test, they must use that conceptual knowledge to categorize new stimuli. The important manipulation here is that one task is an incidential learning task, where learning the category structure is not the explicit goal of the task, while in the other task, participants explicitly learn the category structures through trial and error with feedback. Together the data visualizations show that this manipulation of learning may actually drive how we make categorization judgements for new stimuli. 
+
+Because these visualizations no longer fit into the research that I am proposing in my NRSA application, I have decided to get a little more creative with them. The visualizations will still be intended for a scientific community, but for communication of the data within my lab. The emphasize will be on data exploration that can help guide future research questions. 
